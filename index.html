@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris Game</title>
+    <style>
+        canvas {
+            display: block;
+            margin: auto;
+            background: black;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        class Tetris {
+            constructor() {
+                this.canvas = document.createElement("canvas");
+                this.context = this.canvas.getContext("2d");
+                this.canvas.width = 300;
+                this.canvas.height = 600;
+                document.body.appendChild(this.canvas);
+                this.board = this.createBoard(10, 20);
+                this.piece = this.createPiece();
+                this.gameLoop();
+            }
+
+            createBoard(width, height) {
+                return Array.from({ length: height }, () => Array(width).fill(0));
+            }
+
+            createPiece() {
+                const pieces = [
+                    [[1, 1, 1, 1]],
+                    [[1, 1], [1, 1]],
+                    [[0, 1, 0], [1, 1, 1]],
+                    [[1, 0, 0], [1, 1, 1]],
+                    [[0, 0, 1], [1, 1, 1]],
+                ];
+                return { shape: pieces[Math.floor(Math.random() * pieces.length)], x: 3, y: 0 };
+            }
+
+            draw() {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.drawBoard();
+                this.drawPiece();
+            }
+
+            drawBoard() {
+                this.context.fillStyle = "#000";
+                this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+
+            drawPiece() {
+                this.context.fillStyle = "blue";
+                this.piece.shape.forEach((row, y) => {
+                    row.forEach((value, x) => {
+                        if (value) {
+                            this.context.fillRect((this.piece.x + x) * 30, (this.piece.y + y) * 30, 30, 30);
+                        }
+                    });
+                });
+            }
+
+            gameLoop() {
+                this.draw();
+                requestAnimationFrame(() => this.gameLoop());
+            }
+        }
+
+        new Tetris();
+    </script>
+</body>
+</html>
